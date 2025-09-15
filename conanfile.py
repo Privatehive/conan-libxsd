@@ -1,46 +1,66 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from conans import ConanFile, tools
-import shutil
-import os
+from conan import ConanFile
+from conan.errors import ConanInvalidConfiguration
+from conan.tools.files import get, copy
+import json, os
 
+required_conan_version = ">=2.0"
 
 class libxsdConan(ConanFile):
-    name = "libxsd"
-    version = "4.0.0"
-    description = "CodeSynthesis XSD is a W3C XML Schema to C++ translator"
-    url = "https://github.com/Tereius/conan-libxsd"
-    homepage = "https://www.codesynthesis.com/projects/xsd/"
-    license = "GPLv2"
+    jsonInfo = json.load(open("info.json", 'r'))
+    # ---Package reference---
+    name = jsonInfo["projectName"]
+    version = jsonInfo["version"]
+    user = jsonInfo["domain"]
+    channel = "stable"
+    # ---Metadata---
+    description = jsonInfo["projectDescription"]
+    license = jsonInfo["license"]
+    author = jsonInfo["vendor"]
+    topics = jsonInfo["topics"]
+    homepage = jsonInfo["homepage"]
+    url = jsonInfo["repository"]
+    # ---Requirements---
+    requires = ["xerces-c/[>=3.2.4]"]
+    tool_requires = []
+    # ---Sources---
+    exports = ["info.json"]
+    exports_sources = []
+    # ---Binary model---
     settings = "os", "arch"
+    options = {}
+    default_options = {
+        "xerces-c/*:shared": False,
+        "xerces-c/*:network": False,
+    }
+    package_type = "header-library"
+    no_copy_source = True
 
-    @property
-    def arch(self):
-        return "x86_64" if self.settings.arch == "x86_64" else "i686"
+    def validate(self):
+        valid_os = ["Windows", "Linux", "Macos"]
+        if str(self.settings_build.os) not in valid_os:
+            raise ConanInvalidConfiguration(f"{self.name} {self.version} is only supported for the following operating systems: {valid_os}")
+        valid_arch = ["x86_64", "armv8"]
+        if str(self.settings_build.arch) not in valid_arch:
+            raise ConanInvalidConfiguration(f"{self.name} {self.version} is only supported for the following architectures on {self.settings.os}: {valid_arch}")
 
     def source(self):
-        v = tools.Version(self.version)
-        if self.settings.os == 'Windows':
-            source_url = "https://www.codesynthesis.com/download/xsd/%s.%s/windows/i686/xsd-%s-i686-windows.zip" % (v.major, v.minor, self.version)
-        elif self.settings.os == 'Macos':
-            source_url = "https://www.codesynthesis.com/download/xsd/%s.%s/macosx/i686/xsd-%s-i686-macosx.tar.bz2" % (v.major, v.minor, self.version)
-        else:
-            source_url = "https://www.codesynthesis.com/download/xsd/%s.%s/linux-gnu/%s/xsd-%s-%s-linux-gnu.tar.bz2" % (v.major, v.minor, self.arch, self.version, self.arch)
-        tools.get(source_url)
+        get(self, **self.conan_data["sources"][self.version]["libXSD"], strip_root=True)
+
+    def build(self):
+        get(self, **self.conan_data["sources"][self.version][str(self.settings_build.os)][str(self.settings_build.arch)], strip_root=True)
 
     def package(self):
+        copy(self, "*", os.path.join(self.source_folder, "xsd"), os.path.join(self.package_folder, "include", "xsd"))
+        copy(self, "usr/local/bin/xsd", os.path.join(self.build_folder), os.path.join(self.package_folder, "bin"), keep_path=False)
+        copy(self, "bin/xsd.exe", os.path.join(self.build_folder), os.path.join(self.package_folder, "bin"), keep_path=False)
 
-        if self.settings.os == 'Windows':
-            folder = "xsd-%s-i686-windows" % self.version
-        elif self.settings.os == 'Macos':
-            folder = "xsd-%s-i686-macosx" % self.version
-        else:
-            folder = "xsd-%s-%s-linux-gnu" % (self.version, self.arch)
-        self.copy("*", src=folder)
-        self.copy("*", src=os.path.join(folder, "libxsd"), dst="include")
+    def package_id(self):
+        self.info.settings_build = self.settings_build
 
     def package_info(self):
-        bin_path = os.path.join(self.package_folder, "bin")
-        self.output.info('Appending PATH environment variable: %s' % bin_path)
-        self.env_info.PATH.append(bin_path)
+        self.output.info('Prepending to PATH environment variable: %s' % os.path.join(self.package_folder, "bin"))
+        self.buildenv_info.prepend_path("PATH", os.path.join(self.package_folder, "bin"))
+        self.cpp_info.libdirs = []

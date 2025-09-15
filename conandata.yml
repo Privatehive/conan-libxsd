@@ -1,0 +1,20 @@
+sources:
+  "4.2.0":
+    "libXSD":
+      url: "https://www.codesynthesis.com/download/xsd/4.2/libxsd-4.2.0.tar.gz"
+      sha256: "55caf0038603883eb39ac4caeaacda23a09cf81cffc8eb55a854b6b06ef2c52e"
+    "Windows":
+      "x86_64":
+        url: "https://www.codesynthesis.com/download/xsd/4.2/windows/windows10/x86_64/xsd-4.2.0-x86_64-windows10.zip"
+        sha256: "0629f15c72224192eb1c8f89dd99cbc8dae6f680f353b965c20ecadcb883d40e"
+    "Linux":
+      "x86_64":
+        url: "https://www.codesynthesis.com/download/xsd/4.2/linux/linux-glibc2.31/x86_64/xsd-4.2.0-x86_64-linux-glibc2.31.tar.xz"
+        sha256: "1fc140e943bbcd8e9de4bf32f4632194d202430d584701656bea98c50eabee7d"
+    "Macos":
+      "x86_64":
+        url: "https://www.codesynthesis.com/download/xsd/4.2/macos/macos13.5/aarch64/xsd-4.2.0-aarch64-macos13.5.tar.xz"
+        sha256: "3e5e4767c44401105ccba01399451387be60bf122ffd6ed28f9c13d0fce9677e"
+      "armv8":
+        url: "https://www.codesynthesis.com/download/xsd/4.2/macos/macos13.4/x86_64/xsd-4.2.0-x86_64-macos13.4.tar.xz"
+        sha256: "a9faeb41f0865a40bd572b9b43317f5bdb24418bb851ef0aa4ed9670b5960a65"

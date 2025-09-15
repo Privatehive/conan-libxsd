@@ -1,0 +1,13 @@
+{
+  "version": "4.2.0",
+  "projectName": "libxsd",
+  "projectDescription": "CodeSynthesis XSD is an open-source, cross-platform W3C XML Schema 1.0 to C++ data binding compiler. Provided with an XML document specification (XML Schema), it generates C++ classes that represent the given vocabulary as well as XML parsing and serialization code.",
+  "vendor": "Björn Stresing",
+  "contact": "bjoern.stresing@gmx.de",
+  "domain": "de.privatehive",
+  "copyrightYear": "2025",
+  "repository": "https://github.com/Privatehive/conan-libxsd",
+  "topics": ["XML", "XSD"],
+  "homepage": "https://www.codesynthesis.com/",
+  "license": "GPLv2"
+}
