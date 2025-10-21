@@ -11,6 +11,9 @@ sources:
       "x86_64":
         url: "https://www.codesynthesis.com/download/xsd/4.2/linux/linux-glibc2.31/x86_64/xsd-4.2.0-x86_64-linux-glibc2.31.tar.xz"
         sha256: "1fc140e943bbcd8e9de4bf32f4632194d202430d584701656bea98c50eabee7d"
+      "armv8": # missing xsd binaries
+        url: "https://www.codesynthesis.com/download/xsd/4.2/linux/linux-glibc2.31/x86_64/xsd-4.2.0-x86_64-linux-glibc2.31.tar.xz"
+        sha256: "1fc140e943bbcd8e9de4bf32f4632194d202430d584701656bea98c50eabee7d"
     "Macos":
       "x86_64":
         url: "https://www.codesynthesis.com/download/xsd/4.2/macos/macos13.5/aarch64/xsd-4.2.0-aarch64-macos13.5.tar.xz"
